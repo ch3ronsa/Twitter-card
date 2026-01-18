@@ -17,11 +17,23 @@ export default function Home() {
 
   const handleGenerate = async (username: string) => {
     setIsLoading(true);
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    const data = generateMockUserData(username);
-    setUserData(data);
-    setIsLoading(false);
+    try {
+      const response = await fetch(`/api/twitter?username=${username.replace('@', '')}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || 'Failed to fetch user data');
+        setIsLoading(false);
+        return;
+      }
+
+      setUserData(data);
+    } catch (err) {
+      console.error('API call failed', err);
+      alert('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDownload = async () => {
@@ -107,8 +119,8 @@ export default function Home() {
                     </button>
                     <button
                       className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95 border ${theme === 'cyberpunk'
-                          ? 'border-white/10 bg-white/5 text-white'
-                          : 'border-slate-200 bg-white text-slate-800'
+                        ? 'border-white/10 bg-white/5 text-white'
+                        : 'border-slate-200 bg-white text-slate-800'
                         }`}
                     >
                       <Share2 size={18} />
