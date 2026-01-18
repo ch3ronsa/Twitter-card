@@ -1,65 +1,143 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState, useRef } from 'react';
+import { AccessCard } from '@/components/AccessCard';
+import { GeneratorForm } from '@/components/GeneratorForm';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
+import { generateMockUserData, TwitterUserData } from '@/lib/mockData';
+import { toPng } from 'html-to-image';
+import { Download, Share2, Twitter, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
+  const [userData, setUserData] = useState<TwitterUserData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [theme, setTheme] = useState<'cyberpunk' | 'minimalist'>('cyberpunk');
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleGenerate = async (username: string) => {
+    setIsLoading(true);
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    const data = generateMockUserData(username);
+    setUserData(data);
+    setIsLoading(false);
+  };
+
+  const handleDownload = async () => {
+    if (cardRef.current === null) return;
+
+    try {
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2, // High quality
+      });
+      const link = document.createElement('a');
+      link.download = `twitter-access-card-${userData?.username.replace('@', '')}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Download failed', err);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className={`min-h-screen flex flex-col items-center justify-start p-6 transition-colors duration-500 ${theme === 'cyberpunk' ? 'bg-[#050505] text-white' : 'bg-[#f8fafc] text-slate-900'
+      }`} data-theme={theme}>
+
+      {/* Background decoration */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-20">
+        <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full blur-[120px] ${theme === 'cyberpunk' ? 'bg-cyber-blue/20' : 'bg-slate-300/30'
+          }`}></div>
+      </div>
+
+      <div className="relative z-10 w-full max-w-4xl flex flex-col items-center pt-12 md:pt-20">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex items-center gap-2 mb-4"
+        >
+          <div className={`p-2 rounded-xl ${theme === 'cyberpunk' ? 'bg-cyber-blue/10 border border-cyber-blue/20' : 'bg-slate-100 border border-slate-200'}`}>
+            <Twitter className={theme === 'cyberpunk' ? 'text-cyber-blue' : 'text-slate-400'} size={24} />
+          </div>
+          <span className={`font-display font-medium tracking-tight ${theme === 'cyberpunk' ? 'text-white/60' : 'text-slate-400'}`}>
+            ID-GEN / PRO
+          </span>
+        </motion.div>
+
+        <h1 className="text-4xl md:text-6xl font-display font-black text-center mb-6 tracking-tight leading-tight">
+          Create Your <br />
+          <span className={theme === 'cyberpunk' ? 'shimmer-text' : 'text-slate-900'}>
+            Twitter Identity Card
+          </span>
+        </h1>
+
+        <p className={`max-w-lg text-center mb-12 text-lg md:text-xl ${theme === 'cyberpunk' ? 'text-white/50' : 'text-slate-500'}`}>
+          Generate a high-fidelity digital ID for your profile.
+          Perfect for sharing your aesthetics across the web.
+        </p>
+
+        <div className="flex flex-col items-center gap-8 w-full">
+          <GeneratorForm onGenerate={handleGenerate} isLoading={isLoading} />
+
+          <div className="w-full flex justify-center">
+            <ThemeSwitcher currentTheme={theme} setTheme={setTheme} />
+          </div>
+
+          <div className="mt-12 w-full flex flex-col items-center gap-8 min-h-[400px]">
+            <AnimatePresence mode="wait">
+              {userData ? (
+                <motion.div
+                  key="card"
+                  initial={{ opacity: 0, rotateY: -20, scale: 0.8 }}
+                  animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ type: "spring", stiffness: 100 }}
+                  className="flex flex-col items-center gap-6"
+                >
+                  <AccessCard data={userData} theme={theme} cardRef={cardRef} />
+
+                  <div className="flex gap-4">
+                    <button
+                      onClick={handleDownload}
+                      className="flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95"
+                    >
+                      <Download size={18} />
+                      Download HD
+                    </button>
+                    <button
+                      className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95 border ${theme === 'cyberpunk'
+                          ? 'border-white/10 bg-white/5 text-white'
+                          : 'border-slate-200 bg-white text-slate-800'
+                        }`}
+                    >
+                      <Share2 size={18} />
+                      Share
+                    </button>
+                  </div>
+                </motion.div>
+              ) : (
+                !isLoading && (
+                  <motion.div
+                    key="empty"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className={`flex flex-col items-center text-center p-12 rounded-3xl border-2 border-dashed ${theme === 'cyberpunk' ? 'border-white/5 bg-white/[0.02] text-white/20' : 'border-slate-100 bg-slate-50 text-slate-300'
+                      }`}
+                  >
+                    <Sparkles size={48} className="mb-4" />
+                    <p className="font-medium">Enter your username above to begin</p>
+                  </motion.div>
+                )
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+
+      <footer className={`mt-auto pt-20 pb-8 text-sm ${theme === 'cyberpunk' ? 'text-white/20' : 'text-slate-400'}`}>
+        Built with Precision & Style. Based on X / Twitter.
+      </footer>
+    </main>
   );
 }
