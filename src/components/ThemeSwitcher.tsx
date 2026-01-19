@@ -1,9 +1,10 @@
 import React from 'react';
-import { Moon, Sun, Star, Rocket } from 'lucide-react';
+import { Moon, Sun, Star, Rocket, Shield, Heart } from 'lucide-react';
+import { ThemeType } from '@/app/page';
 
 interface ThemeSwitcherProps {
-    currentTheme: 'cyberpunk' | 'minimalist' | 'bulk1' | 'bulk2';
-    setTheme: (theme: 'cyberpunk' | 'minimalist' | 'bulk1' | 'bulk2') => void;
+    currentTheme: ThemeType;
+    setTheme: (theme: ThemeType) => void;
 }
 
 export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ currentTheme, setTheme }) => {
@@ -48,6 +49,26 @@ export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ currentTheme, setT
             >
                 <Rocket className="w-4 h-4" />
                 Bulk 2
+            </button>
+            <button
+                onClick={() => setTheme('bulk3')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${currentTheme === 'bulk3'
+                    ? 'bg-blue-600 text-white shadow-lg scale-105'
+                    : 'text-slate-500 hover:text-slate-800'
+                    }`}
+            >
+                <Shield className="w-4 h-4" />
+                Bulk 3
+            </button>
+            <button
+                onClick={() => setTheme('bulk4')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${currentTheme === 'bulk4'
+                    ? 'bg-pink-600 text-white shadow-lg scale-105'
+                    : 'text-slate-500 hover:text-slate-800'
+                    }`}
+            >
+                <Heart className="w-4 h-4" fill="currentColor" />
+                Bulk 4
             </button>
         </div>
     );
