@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Home() {
   const [userData, setUserData] = useState<TwitterUserData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [theme, setTheme] = useState<'cyberpunk' | 'minimalist'>('cyberpunk');
+  const [theme, setTheme] = useState<'cyberpunk' | 'minimalist' | 'bulk1' | 'bulk2'>('bulk1');
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleGenerate = async (username: string) => {
@@ -54,13 +54,22 @@ export default function Home() {
   };
 
   return (
-    <main className={`min-h-screen flex flex-col items-center justify-start p-6 transition-colors duration-500 ${theme === 'cyberpunk' ? 'bg-[#050505] text-white' : 'bg-[#f8fafc] text-slate-900'
+    <main className={`min-h-screen flex flex-col items-center justify-start p-6 transition-colors duration-500 overflow-x-hidden ${theme === 'cyberpunk' ? 'bg-[#050505] text-white' :
+      theme === 'bulk1' ? 'bg-black text-white' :
+        theme === 'bulk2' ? 'bg-[#0a0a0f] text-white' :
+          'bg-[#f8fafc] text-slate-900'
       }`} data-theme={theme}>
 
       {/* Background decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-20">
-        <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full blur-[120px] ${theme === 'cyberpunk' ? 'bg-cyber-blue/20' : 'bg-slate-300/30'
+        <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full blur-[120px] ${theme === 'cyberpunk' ? 'bg-cyber-blue/20' :
+          theme === 'bulk1' ? 'bg-white/10' :
+            theme === 'bulk2' ? 'bg-purple-600/20' :
+              'bg-slate-300/30'
           }`}></div>
+        {(theme === 'bulk1' || theme === 'bulk2') && (
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-screen bg-gradient-to-b from-white/20 to-transparent"></div>
+        )}
       </div>
 
       <div className="relative z-10 w-full max-w-4xl flex flex-col items-center pt-12 md:pt-20">
@@ -69,22 +78,40 @@ export default function Home() {
           animate={{ opacity: 1, scale: 1 }}
           className="flex items-center gap-2 mb-4"
         >
-          <div className={`p-2 rounded-xl ${theme === 'cyberpunk' ? 'bg-cyber-blue/10 border border-cyber-blue/20' : 'bg-slate-100 border border-slate-200'}`}>
-            <Twitter className={theme === 'cyberpunk' ? 'text-cyber-blue' : 'text-slate-400'} size={24} />
+          <div className={`p-2 rounded-xl ${theme === 'cyberpunk' ? 'bg-cyber-blue/10 border border-cyber-blue/20' :
+            theme === 'bulk1' || theme === 'bulk2' ? 'bg-white/5 border border-white/10' :
+              'bg-slate-100 border border-slate-200'
+            }`}>
+            <Twitter className={
+              theme === 'cyberpunk' ? 'text-cyber-blue' :
+                theme === 'bulk1' ? 'text-white' :
+                  theme === 'bulk2' ? 'text-blue-400' :
+                    'text-slate-400'
+            } size={24} />
           </div>
-          <span className={`font-display font-medium tracking-tight ${theme === 'cyberpunk' ? 'text-white/60' : 'text-slate-400'}`}>
+          <span className={`font-display font-medium tracking-tight ${theme === 'cyberpunk' ? 'text-white/60' :
+            theme === 'bulk1' || theme === 'bulk2' ? 'text-white/40 uppercase tracking-widest text-[10px]' :
+              'text-slate-400'
+            }`}>
             ID-GEN / PRO
           </span>
         </motion.div>
 
         <h1 className="text-4xl md:text-6xl font-display font-black text-center mb-6 tracking-tight leading-tight">
           Create Your <br />
-          <span className={theme === 'cyberpunk' ? 'shimmer-text' : 'text-slate-900'}>
+          <span className={
+            theme === 'cyberpunk' ? 'shimmer-text' :
+              theme === 'bulk1' || theme === 'bulk2' ? 'uppercase tracking-tighter' :
+                'text-slate-900'
+          }>
             Twitter Identity Card
           </span>
         </h1>
 
-        <p className={`max-w-lg text-center mb-12 text-lg md:text-xl ${theme === 'cyberpunk' ? 'text-white/50' : 'text-slate-500'}`}>
+        <p className={`max-w-lg text-center mb-12 text-lg md:text-xl ${theme === 'cyberpunk' ? 'text-white/50' :
+          theme === 'bulk1' || theme === 'bulk2' ? 'text-white/30 font-medium' :
+            'text-slate-500'
+          }`}>
           Generate a high-fidelity digital ID for your profile.
           Perfect for sharing your aesthetics across the web.
         </p>
@@ -112,15 +139,15 @@ export default function Home() {
                   <div className="flex gap-4">
                     <button
                       onClick={handleDownload}
-                      className="flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95"
+                      className="flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95 bg-white text-black"
                     >
                       <Download size={18} />
                       Download HD
                     </button>
                     <button
-                      className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95 border ${theme === 'cyberpunk'
-                        ? 'border-white/10 bg-white/5 text-white'
-                        : 'border-slate-200 bg-white text-slate-800'
+                      className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95 border ${theme === 'cyberpunk' ? 'border-white/10 bg-white/5 text-white' :
+                        theme === 'bulk1' || theme === 'bulk2' ? 'border-white/20 bg-black text-white' :
+                          'border-slate-200 bg-white text-slate-800'
                         }`}
                     >
                       <Share2 size={18} />
@@ -134,7 +161,9 @@ export default function Home() {
                     key="empty"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className={`flex flex-col items-center text-center p-12 rounded-3xl border-2 border-dashed ${theme === 'cyberpunk' ? 'border-white/5 bg-white/[0.02] text-white/20' : 'border-slate-100 bg-slate-50 text-slate-300'
+                    className={`flex flex-col items-center text-center p-12 rounded-3xl border-2 border-dashed ${theme === 'cyberpunk' ? 'border-white/5 bg-white/[0.02] text-white/20' :
+                      theme === 'bulk1' || theme === 'bulk2' ? 'border-white/10 bg-white/[0.01] text-white/10' :
+                        'border-slate-100 bg-slate-50 text-slate-300'
                       }`}
                   >
                     <Sparkles size={48} className="mb-4" />
@@ -147,7 +176,10 @@ export default function Home() {
         </div>
       </div>
 
-      <footer className={`mt-auto pt-20 pb-8 text-sm ${theme === 'cyberpunk' ? 'text-white/20' : 'text-slate-400'}`}>
+      <footer className={`mt-auto pt-20 pb-8 text-sm ${theme === 'cyberpunk' ? 'text-white/20' :
+        theme === 'bulk1' || theme === 'bulk2' ? 'text-white/10 uppercase tracking-[0.3em] font-bold' :
+          'text-slate-400'
+        }`}>
         Built with Precision & Style. Based on X / Twitter.
       </footer>
     </main>
