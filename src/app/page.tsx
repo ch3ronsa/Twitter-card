@@ -55,6 +55,12 @@ export default function Home() {
     }
   };
 
+  const handleShare = () => {
+    if (!userData) return;
+    const shareText = encodeURIComponent(`Check out my new Twitter Identity Card! 🪪✨\n\nGenerated for ${userData.username} using ID-GEN PRO.\n\nCreate yours here: ${window.location.origin}\n\n#TwitterCard #DigitalID #Bulk`);
+    window.open(`https://twitter.com/intent/tweet?text=${shareText}`, '_blank');
+  };
+
   return (
     <main className={`min-h-screen flex flex-col items-center justify-start p-6 transition-colors duration-500 overflow-x-hidden ${theme === 'cyberpunk' ? 'bg-[#050505] text-white' :
         theme === 'bulk1' ? 'bg-black text-white' :
@@ -152,6 +158,7 @@ export default function Home() {
                       Download HD
                     </button>
                     <button
+                      onClick={handleShare}
                       className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95 border ${theme === 'cyberpunk' ? 'border-white/10 bg-white/5 text-white' :
                           theme === 'minimalist' ? 'border-slate-200 bg-white text-slate-800' :
                             'border-white/20 bg-black text-white'
@@ -169,8 +176,8 @@ export default function Home() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className={`flex flex-col items-center text-center p-12 rounded-3xl border-2 border-dashed ${theme === 'cyberpunk' ? 'border-white/5 bg-white/[0.02] text-white/20' :
-                        theme === 'minimalist' ? 'border-slate-100 bg-slate-50 text-slate-300' :
-                          'border-white/10 bg-white/[0.01] text-white/10'
+                      theme === 'minimalist' ? 'border-slate-100 bg-slate-50 text-slate-300' :
+                        'border-white/10 bg-white/[0.01] text-white/10'
                       }`}
                   >
                     <Sparkles size={48} className="mb-4" />
@@ -184,8 +191,8 @@ export default function Home() {
       </div>
 
       <footer className={`mt-auto pt-20 pb-8 text-sm ${theme === 'cyberpunk' ? 'text-white/20' :
-          theme === 'minimalist' ? 'text-slate-400' :
-            'text-white/10 uppercase tracking-[0.3em] font-bold'
+        theme === 'minimalist' ? 'text-slate-400' :
+          'text-white/10 uppercase tracking-[0.3em] font-bold'
         }`}>
         Built with Precision & Style. Based on X / Twitter.
       </footer>
