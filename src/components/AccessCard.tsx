@@ -47,8 +47,8 @@ export const AccessCard: React.FC<AccessCardProps> = ({ data, theme, cardRef }) 
             <div
                 ref={cardRef}
                 className={`relative w-[350px] md:w-[400px] aspect-[1.586/1] rounded-3xl overflow-hidden ${isCyber ? 'cyber-glass text-white grain' :
-                        isBulkAny ? 'bg-black text-white border border-white/10' :
-                            'minimal-glass text-slate-800 grain'
+                    isBulkAny ? 'bg-black text-white border border-white/10' :
+                        'minimal-glass text-slate-800 grain'
                     }`}
             >
                 {/* Theme Backgrounds */}
@@ -102,8 +102,8 @@ export const AccessCard: React.FC<AccessCardProps> = ({ data, theme, cardRef }) 
                         <div className="flex gap-4">
                             {/* Profile Image */}
                             <div className={`relative p-0.5 rounded-2xl ${isCyber ? 'bg-gradient-to-br from-cyber-blue to-cyber-purple' :
-                                    isBulkAny ? 'bg-white/10 border border-white/20' :
-                                        'bg-slate-200'
+                                isBulkAny ? 'bg-white/10 border border-white/20' :
+                                    'bg-slate-200'
                                 }`}>
                                 <img
                                     src={data.profilePicture}
@@ -115,8 +115,8 @@ export const AccessCard: React.FC<AccessCardProps> = ({ data, theme, cardRef }) 
                             <div className="flex flex-col justify-center">
                                 <div className="flex items-center gap-1">
                                     <h2 className={`font-display font-bold text-xl tracking-tight ${isCyber ? 'text-glow' :
-                                            isBulkAny ? 'uppercase tracking-widest' :
-                                                ''
+                                        isBulkAny ? 'uppercase tracking-widest' :
+                                            ''
                                         }`}>
                                         {data.name}
                                     </h2>
@@ -125,21 +125,29 @@ export const AccessCard: React.FC<AccessCardProps> = ({ data, theme, cardRef }) 
                                     )}
                                 </div>
                                 <p className={`text-sm ${isCyber ? 'text-cyber-blue/80' :
-                                        isBulkAny ? 'text-white/40 font-mono' :
-                                            'text-slate-500'
+                                    isBulkAny ? 'text-white/40 font-mono' :
+                                        'text-slate-500'
                                     }`}>
                                     {data.username}
                                 </p>
                             </div>
                         </div>
 
-                        <Twitter className={`w-5 h-5 ${isCyber ? 'text-cyber-blue' : isBulkAny ? 'text-white' : 'text-slate-300'}`} />
+                        <div className="flex flex-col items-end gap-1">
+                            <Twitter className={`w-5 h-5 ${isCyber ? 'text-cyber-blue' : isBulkAny ? 'text-white' : 'text-slate-300'}`} />
+                            <span className={`text-[7px] uppercase tracking-[0.2em] font-black ${isCyber ? 'text-cyber-blue/80' :
+                                    isBulkAny ? 'text-white/40' :
+                                        'text-slate-400'
+                                }`}>
+                                Access Card
+                            </span>
+                        </div>
                     </div>
 
                     <div className="mt-4">
                         <p className={`text-sm line-clamp-2 leading-relaxed ${isCyber ? 'text-white/70' :
-                                isBulkAny ? 'text-white/90 font-medium drop-shadow-md' :
-                                    'text-slate-600'
+                            isBulkAny ? 'text-white/90 font-medium drop-shadow-md' :
+                                'text-slate-600'
                             }`}>
                             {data.bio}
                         </p>
